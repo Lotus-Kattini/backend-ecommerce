@@ -37,15 +37,21 @@ class ProductController extends Controller
     public function store(StoreProductRequest $request)
     {
         $validatedData = $request->validated();
-        if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('productsImages', 'public');
-            $validatedData['image'] = $path;
-        }
+        unset($validatedData['images']); // prevent mass assignment of 'images'
 
         $product = Product::create($validatedData);
+
+
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image){
+                $path = $image->store('productsImages', 'public');
+                $product->images()->create(['image' => $path]);
+            }
+        }
+
         return response()->json([
             'message' => 'product created successfully',
-            'data' => $product,
+            'data' => $product->load('images'),
         ], 200);
     }
 
@@ -54,16 +60,29 @@ class ProductController extends Controller
     {
         $product = Product::find($id);
         if ($product) {
+
             $validatedData = $request->validated();
-            if ($request->hasFile('image')) {
-                $path = $request->file('image')->store('productsImages', 'public');
-                $validatedData['image'] = $path;
-            }
+            unset($validatedData['images']); // prevent mass assignment of 'images'
+
             $product->update($validatedData);
+
+            if ($request->hasFile('images')) {
+                // Delete all existing images
+                $product->images()->delete();
+                
+                // Store new images
+                foreach ($request->file('images') as $image){
+                    $path = $image->store('productsImages', 'public');
+                    $product->images()->create(['image' => $path]);
+
+                }
+            }
+
             return response()->json([
-                'message' => 'product created successfully',
-                'data' => $product,
+                'message' => 'product updated successfully',
+                'data' => $product->load('images'),
             ], 200);
+            
         } else {
             return response()->json([
                 'message' => 'product not found ',

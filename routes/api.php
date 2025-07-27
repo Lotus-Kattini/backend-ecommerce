@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\CartItemController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -54,6 +55,12 @@ Route::prefix('admin')->middleware(['auth:api','isAdmin'])->group(function(){
     Route::post('/products/create',[ProductController::class,'store']);
     Route::post('/products/update/{id}',[ProductController::class,'update']);
     Route::delete('/products/delete/{id}',[ProductController::class,'destroy']);
+
+
+    //users
+    Route::get('/users',[UserController::class,'index']);
+    Route::get('/users/{id}',[UserController::class,'show']);
+    Route::delete('/users/{id}',[UserController::class,'destroy']);
 
 
 });
