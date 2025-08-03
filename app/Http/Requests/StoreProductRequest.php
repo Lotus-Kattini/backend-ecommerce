@@ -19,8 +19,10 @@ class StoreProductRequest extends FormRequest
     {
         return [
             'category_id'=>'required|exists:categories,id',
-            'name'=>'required|string|max:255',
-            'description'=>'required|string|max:255',
+            'nameEn'=>'required|string|max:255',
+            'nameAr'=>'required|string|max:255',
+            'descriptionEn'=>'required|string|max:255',
+            'descriptionAr'=>'required|string|max:255',
             'price'=>'required|decimal:0,1000000',
             'quantity'=>'required|integer',
             'images'=>'required|array',

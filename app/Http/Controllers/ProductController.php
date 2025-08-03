@@ -43,7 +43,7 @@ class ProductController extends Controller
 
 
         if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $image){
+            foreach ($request->file('images') as $image) {
                 $path = $image->store('productsImages', 'public');
                 $product->images()->create(['image' => $path]);
             }
@@ -69,12 +69,11 @@ class ProductController extends Controller
             if ($request->hasFile('images')) {
                 // Delete all existing images
                 $product->images()->delete();
-                
+
                 // Store new images
-                foreach ($request->file('images') as $image){
+                foreach ($request->file('images') as $image) {
                     $path = $image->store('productsImages', 'public');
                     $product->images()->create(['image' => $path]);
-
                 }
             }
 
@@ -82,7 +81,6 @@ class ProductController extends Controller
                 'message' => 'product updated successfully',
                 'data' => $product->load('images'),
             ], 200);
-            
         } else {
             return response()->json([
                 'message' => 'product not found ',
@@ -112,19 +110,19 @@ class ProductController extends Controller
     public function search(Request $request)
     {
         $search = strtolower(trim($request->query('query')));
-        if ($search) {
 
+        if ($search) {
             $products = Product::with('category')
                 ->where(function ($q) use ($search) {
-                    $q->whereRaw('LOWER(name) LIKE ?', ["%{$search}%"])
-                        ->orWhereRaw('LOWER(description) LIKE ?', ["%{$search}%"]);
+                    $q->whereRaw('LOWER(nameEN) LIKE ?', ["%{$search}%"])
+                        ->orWhereRaw('LOWER(nameAr) LIKE ?', ["%{$search}%"]);
                 })->get();
 
             if (!$products->isEmpty()) {
                 return response()->json($products, 200);
             } else {
                 return response()->json([
-                    'message' => 'no results found for the query'
+                    'message' => 'No results found for the query'
                 ], 404);
             }
         } else {
@@ -133,13 +131,14 @@ class ProductController extends Controller
     }
 
 
-    public function filter(Request $request){
-        $categoryId=$request->query('category_id');
-        if($categoryId){
-            $products=Product::with('category')->where('category_id',$categoryId)->get();
-            return response()->json($products, 200);
 
-        }else{
+    public function filter(Request $request)
+    {
+        $categoryId = $request->query('category_id');
+        if ($categoryId) {
+            $products = Product::with('category')->where('category_id', $categoryId)->get();
+            return response()->json($products, 200);
+        } else {
             return response()->json(['message' => 'category id is not found.'], 404);
         }
     }

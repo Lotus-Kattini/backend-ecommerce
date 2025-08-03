@@ -19,8 +19,10 @@ class ProductFactory extends Factory
     {
         return [
             'category_id'=>Category::factory(),
-            'name'=>fake()->name(),
-            'description'=>fake()->sentence(),
+            'nameEn'=>fake()->name(),
+            'nameAr'=>fake()->name(),
+            'descriptionEn'=>fake()->sentence(),
+            'descriptionAr'=>fake()->sentence(),
             'price' => fake()->randomFloat(2, 10, 1000),
             'quantity'=>fake()->numberBetween('1','100')
         ];

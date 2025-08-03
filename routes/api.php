@@ -5,6 +5,7 @@ use App\Http\Controllers\CartItemController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\WishlistController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -12,7 +13,7 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-
+//auth
 Route::post('/register',[AuthController::class,'register']);
 Route::post('/login',[AuthController::class,'login']);
 Route::post('/logout',[AuthController::class,'logout'])->middleware('auth:api');
@@ -39,6 +40,12 @@ Route::middleware('auth:api')->group(function(){
     Route::delete('/cart/clear', [CartItemController::class, 'clear']);
     Route::post('/cart/{id}', [CartItemController::class, 'update']);
     Route::delete('/cart/{id}', [CartItemController::class, 'destroy']);
+
+
+    //wishlist
+    Route::get('/wishlist',[WishlistController::class,'index']);
+    Route::post('/wishlist/{productId}',[WishlistController::class,'store']);
+    Route::delete('/wishlist/{productId}',[WishlistController::class,'destroy']);
 
 });
 

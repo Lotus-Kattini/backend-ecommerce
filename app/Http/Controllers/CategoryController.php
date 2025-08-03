@@ -30,7 +30,8 @@ class CategoryController extends Controller
 
     public function store(Request $request){
         $category=$request->validate([
-            'name'=>'required|string|max:255'
+            'nameEn'=>'required|string|max:255',
+            'nameAr'=>'required|string|max:255',
         ]);
 
         $createdCategory=Category::create($category);
@@ -45,7 +46,8 @@ class CategoryController extends Controller
         $category=Category::find($id);
         if($category){
             $vaidatedData=$request->validate([
-                'name'=>'required|string'
+                'nameEn'=>'required|string',
+                'nameAr'=>'required|string'
             ]);
             $category->update($vaidatedData);
             return response()->json([

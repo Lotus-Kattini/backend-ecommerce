@@ -30,6 +30,11 @@ class User extends Authenticatable implements JWTSubject
     }
 
 
+    public function wishlist(){
+        return $this->belongsToMany(Product::class,'wishlists');
+    }
+
+
     protected $fillable = [
         'name',
         'email',
